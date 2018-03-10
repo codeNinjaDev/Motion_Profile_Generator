@@ -1,5 +1,5 @@
 # Motion Profile Generator
-Generate Motion Profiles to follow with a Talon SRX
+Generate Motion Profiles to follow with a Talon SRX or Jaci's Pathfinder Library
  
 ![alt text][logo]
 
@@ -9,7 +9,7 @@ Generate Motion Profiles to follow with a Talon SRX
 ---
 - **Units**
 	- Units can be chosen via a drop down menu
-	- Feet or Meters
+	- Feet or Meters or Inches
 - **Time Step**
 	- The rate at which the control loop on the RoboRio runs
 	- Units are in seconds
