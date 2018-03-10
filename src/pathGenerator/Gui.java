@@ -101,6 +101,7 @@ public class Gui {
 	//Tank Drive
 	private Trajectory left;
 	private Trajectory right;
+	private Trajectory trajectory;
 	
 	//Swerve Drive
 	private Trajectory fl;
@@ -153,6 +154,10 @@ public class Gui {
 		frmMotionProfileGenerator.getContentPane().add(trajecPanel);
 		trajecPanel.setLayout(null);
 		
+		JLabel lblWheelDiameter = new JLabel("Wheel Diameter");
+		lblWheelDiameter.setBounds(180, 55, 80, 20);
+		trajecPanel.add(lblWheelDiameter);
+		
 		JLabel lblTimeStep = new JLabel("Time Step");
 		lblTimeStep.setBounds(50, 55, 80, 20);
 		trajecPanel.add(lblTimeStep);
@@ -168,7 +173,7 @@ public class Gui {
 		JLabel lblJerk = new JLabel("Jerk");
 		lblJerk.setBounds(50, 145, 80, 20);
 		trajecPanel.add(lblJerk);
-		
+
 		txtTime = new JTextField();
 		txtTime.setText("0.05");
 		txtTime.setBounds(140, 55, 86, 20);
@@ -351,6 +356,7 @@ public class Gui {
 		cbUnits.setToolTipText("Units");
 		cbUnits.addItem("Feet");
 		cbUnits.addItem("Meters");
+		cbUnits.addItem("Inches");
 		cbUnits.setBounds(340, 205, 86, 20);
 		trajecPanel.add(cbUnits);
 		
@@ -552,7 +558,7 @@ public class Gui {
 			MotionGraphsFeet.motionGraphRed();
 			MotionGraphsFeet.velocityGraph();
 		}
-		else
+		else if(cbUnits.getSelectedIndex() == 1)
 		{
 			// clear graphs
 	    	blueAllianceGraph.clearGraph();
@@ -565,6 +571,18 @@ public class Gui {
 			MotionGraphsMeters.motionGraphBlue();
 			MotionGraphsMeters.motionGraphRed();
 			MotionGraphsMeters.velocityGraph();
+		} else {
+			// clear graphs
+	    	blueAllianceGraph.clearGraph();
+	    	blueAllianceGraph.repaint();
+	    	velocityGraph.clearGraph();
+	    	velocityGraph.repaint();
+	    	redAllianceGraph.clearGraph();
+	    	redAllianceGraph.repaint();
+	    	
+			MotionGraphsInches.motionGraphBlue();
+			MotionGraphsInches.motionGraphRed();
+			MotionGraphsInches.velocityGraph();
 		}
 	}
 	
@@ -636,7 +654,6 @@ public class Gui {
 		acceleration = Double.parseDouble(txtAcceleration.getText()); // default 3
 		jerk = Double.parseDouble(txtJerk.getText()); // default 60
 		wheelBaseW = Double.parseDouble(txtWheelBaseW.getText()); //default 0
-		
 		if (rdbtnSwerveDrive.isSelected())
 		{
 			wheelBaseD = Double.parseDouble(txtWheelBaseD.getText());
@@ -684,7 +701,7 @@ public class Gui {
 			MotionGraphsFeet.motionGraphRed();
 			MotionGraphsFeet.velocityGraph();
 		}
-		else
+		else if(cbUnits.getSelectedIndex() == 1)
 		{
 			// clear graphs
 	    	blueAllianceGraph.clearGraph();
@@ -697,6 +714,17 @@ public class Gui {
 			MotionGraphsMeters.motionGraphBlue();
 			MotionGraphsMeters.motionGraphRed();
 			MotionGraphsMeters.velocityGraph();
+		} else {
+			blueAllianceGraph.clearGraph();
+	    	blueAllianceGraph.repaint();
+	    	velocityGraph.clearGraph();
+	    	velocityGraph.repaint();
+	    	redAllianceGraph.clearGraph();
+	    	redAllianceGraph.repaint();
+	    	
+			MotionGraphsInches.motionGraphBlue();
+			MotionGraphsInches.motionGraphRed();
+			MotionGraphsInches.velocityGraph();
 		}
 		
 		if(timeStep > 0)
@@ -1208,11 +1236,14 @@ public class Gui {
 				    	// Detailed CSV with dt, x, y, position, velocity, acceleration, jerk, and heading
 				        File leftFile = new File(directory, fileName + "_left_detailed.csv");
 				        File rightFile = new File(directory, fileName + "_right_detailed.csv");
-				        
+				        File trajectoryFile = new File(directory, fileName + ".csv");
+
 				        if (chckbxReverse.isSelected())
 				        {
 				        	Pathfinder.writeToCSV(rightFile, left);
 					        Pathfinder.writeToCSV(leftFile, right);
+					        Pathfinder.writeToCSV(trajectoryFile, trajectory);
+					        
 					        
 					        // CSV with position and velocity. To be used with Talon SRX Motion 
 					    	// save left path to CSV
@@ -1233,6 +1264,8 @@ public class Gui {
 				        {
 				        	Pathfinder.writeToCSV(rightFile, right);
 					        Pathfinder.writeToCSV(leftFile, left);
+					        Pathfinder.writeToCSV(trajectoryFile, trajectory);
+
 					        
 					        // CSV with position and velocity. To be used with Talon SRX Motion
 					    	// save left path to CSV
@@ -1446,7 +1479,7 @@ public class Gui {
 		Trajectory.Config config = new Trajectory.Config(fitMethod, Trajectory.Config.SAMPLES_HIGH, timeStep, velocity, acceleration, jerk );
              
 		// Generate the path
-		Trajectory trajectory = Pathfinder.generate(points, config);
+		trajectory = Pathfinder.generate(points, config);
 		
 		if(rdbtnTankDrive.isSelected())
 		{
