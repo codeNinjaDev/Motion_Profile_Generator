@@ -153,9 +153,7 @@ public class Gui {
 		trajecPanel.setBounds(0, 22, 450, 617);
 		frmMotionProfileGenerator.getContentPane().add(trajecPanel);
 		trajecPanel.setLayout(null);
-		
-		
-		
+	
 		JLabel lblTimeStep = new JLabel("Time Step");
 		lblTimeStep.setBounds(50, 55, 80, 20);
 		trajecPanel.add(lblTimeStep);
