@@ -154,9 +154,7 @@ public class Gui {
 		frmMotionProfileGenerator.getContentPane().add(trajecPanel);
 		trajecPanel.setLayout(null);
 		
-		JLabel lblWheelDiameter = new JLabel("Wheel Diameter");
-		lblWheelDiameter.setBounds(180, 55, 80, 20);
-		trajecPanel.add(lblWheelDiameter);
+		
 		
 		JLabel lblTimeStep = new JLabel("Time Step");
 		lblTimeStep.setBounds(50, 55, 80, 20);
