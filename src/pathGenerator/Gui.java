@@ -90,7 +90,10 @@ public class Gui {
 	// Path Waypoints 
 	//private Waypoint[] points;
 	private List<Waypoint> points = new ArrayList<Waypoint>(); // can be variable length after creation
-	
+	private List<Double> xPoints = new ArrayList<Double>();
+	private List<Double> yPoints = new ArrayList<Double>();
+	private List<Double> anglePoints = new ArrayList<Double>();
+
 	double timeStep;
 	double velocity;
 	double acceleration;
@@ -201,7 +204,12 @@ public class Gui {
 		
 		btnGeneratePath.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-					btnGeneratePathActionPerformed();
+					try {
+						btnGeneratePathActionPerformed();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
             }
         });
 		
@@ -643,7 +651,7 @@ public class Gui {
         }
 	}
 		
-	private void btnGeneratePathActionPerformed()
+	private void btnGeneratePathActionPerformed() throws IOException
     {
 		timeStep = Double.parseDouble(txtTime.getText()); //default 0.05 
 		velocity = Double.parseDouble(txtVelocity.getText()); //default 4
@@ -740,7 +748,21 @@ public class Gui {
 									// If waypoints exist
 									if( points.size() > 1 )
 									{
+										System.out.println("Points size 1nd");
+
 										Waypoint tmp[] = new Waypoint[ points.size() ];
+
+										File waypointFile = new File(directory, fileName + "_waypoints.csv");
+								    	FileWriter wfw = new FileWriter(waypointFile);
+								    	PrintWriter wpw = new PrintWriter(wfw);
+								    	for (int i = 0; i < points.size(); i++) 
+								    	{			
+								    		wpw.printf("%f, %f, %f\n", xPoints.get(i), yPoints.get(i), anglePoints.get(i));
+								    	}
+								    	wpw.close();
+								    		
+								    	//wpw.printf(" X , Y , Angle")
+
 										points.toArray( tmp );
 										try
 										{
@@ -766,7 +788,16 @@ public class Gui {
 								// If waypoints exist
 								if( points.size() > 1 )
 								{
+									System.out.println("Points size 2nd");
 									Waypoint tmp[] = new Waypoint[ points.size() ];
+									File waypointFile = new File(directory, fileName + "_waypoints.csv");
+							    	FileWriter wfw = new FileWriter(waypointFile);
+							    	PrintWriter wpw = new PrintWriter(wfw);
+							    	for (int i = 0; i < points.size(); i++) 
+							    	{			
+							    		wpw.printf("%f, %f, %f\n", xPoints.get(i), yPoints.get(i), anglePoints.get(i));
+							    	}
+							    	wpw.close();
 									points.toArray( tmp );
 									try
 									{
@@ -905,11 +936,17 @@ public class Gui {
     	{
     		txtAreaWaypoints.append(line + "\n");
     		// add new point to points list
+    		xPoints.add(xValue);
+    		yPoints.add(yValue);
+    		anglePoints.add(angle);
     		points.add( new Waypoint(xValue, yValue, Pathfinder.d2r(angle)));
     	}
     	else
     	{
     		txtAreaWaypoints.insert(line + "\n", rowStart);
+    		xPoints.add(xValue);
+    		yPoints.add(yValue);
+    		anglePoints.add(angle);
     		points.add(lineNum, new Waypoint(xValue, yValue, Pathfinder.d2r(angle)));
     		btnClear.setEnabled(true);
     		btnDeleteLast.setEnabled(true);
